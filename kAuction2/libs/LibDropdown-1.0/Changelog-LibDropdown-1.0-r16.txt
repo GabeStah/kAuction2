@@ -1,0 +1,72 @@
+------------------------------------------------------------------------
+r16 | dhedbor | 2010-11-23 08:53:59 +0000 (Tue, 23 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+fixed indentation.
+------------------------------------------------------------------------
+r14 | dhedbor | 2010-11-23 08:50:59 +0000 (Tue, 23 Nov 2010) | 2 lines
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+- Hopefully fixed better Ace3 compatibility in the 'info' parameter to callbacks.
+- Fixed some slider issues.
+------------------------------------------------------------------------
+r13 | dhedbor | 2010-11-23 07:45:45 +0000 (Tue, 23 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+Added support for dynamic 'select' values.
+------------------------------------------------------------------------
+r11 | Dessa | 2010-11-21 14:12:06 +0000 (Sun, 21 Nov 2010) | 1 line
+Changed paths:
+   A /trunk/.pkgmeta
+
+add a .pkgmeta for the package-as tag
+------------------------------------------------------------------------
+r9 | dhedbor | 2010-11-20 19:53:59 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0.toc
+
+Made the toc verson be a bit more up to date. Oops.
+------------------------------------------------------------------------
+r7 | dhedbor | 2010-11-20 19:51:19 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+Removed debug print.
+------------------------------------------------------------------------
+r6 | dhedbor | 2010-11-20 19:49:11 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+   M /trunk/LibDropdown-1.0.toc
+
+Added text input box and use the GameTooltip theme for the menus (to match the users preferences) plus some other fixes.
+------------------------------------------------------------------------
+r5 | dhedbor | 2010-11-20 06:52:47 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+Added type = header and fixed frame strata (use tooltip instead of default 'MEDIUM'
+------------------------------------------------------------------------
+r4 | dhedbor | 2010-11-20 05:44:00 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+Fixed hiding/showing of sliders.
+------------------------------------------------------------------------
+r3 | dhedbor | 2010-11-19 08:32:18 +0000 (Fri, 19 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+
+Now sort of actually works
+------------------------------------------------------------------------
+r2 | nevcairiel | 2009-03-11 23:14:14 +0000 (Wed, 11 Mar 2009) | 1 line
+Changed paths:
+   A /trunk/LibDropdown-1.0
+   A /trunk/LibDropdown-1.0/LibDropdown-1.0.lua
+   A /trunk/LibDropdown-1.0/lib.xml
+   A /trunk/LibDropdown-1.0.toc
+
+Import Antiarcs work on LibDropdown-1.0 for future reference and completion
+------------------------------------------------------------------------

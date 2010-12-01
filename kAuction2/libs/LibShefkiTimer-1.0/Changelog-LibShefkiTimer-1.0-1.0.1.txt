@@ -1,0 +1,12 @@
+tag 1.0.1
+dc13c9dc4c6ff3acc969b40aa5c265d8b4a93a03
+Shefki <shefki@shefki.org>
+2010-10-19 21:48:35 -0700
+
+Tag as 1.0.1
+
+
+--------------------
+
+Shefki:
+	- Fix 0 length timers being called immediately rather than on the next OnUpdate.

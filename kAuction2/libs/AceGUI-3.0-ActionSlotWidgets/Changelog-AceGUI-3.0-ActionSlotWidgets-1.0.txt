@@ -1,0 +1,19 @@
+tag 1.0
+7d7ed0b7686c3bac9a0be58e086f97e36c9d22d8
+Adirelle <adirelle@tagada-team.net>
+2010-10-12 22:48:34 +0200
+
+Tagging as "1.0".
+
+
+--------------------
+
+Adirelle:
+	- TOC bump.
+	- Renamed the files to match the project name (widget => widgetS) as it defines several widgets anyway.
+	- Added .pkgmeta.
+	- Added localization as well as specific text display for each kind of ActionSlot.
+	- Fixed ation slots specific to a type (item, spell, ...). Fixed picking up a companion spell from the slot. Properly handle action dragged from action bars.
+	- Trimmed trailing whitespaces.
+	- Added specific widgets restricte to item, spell, macro or equipment sets.
+	- First working version.

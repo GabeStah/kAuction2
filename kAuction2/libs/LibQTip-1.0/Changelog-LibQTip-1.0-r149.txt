@@ -1,0 +1,53 @@
+------------------------------------------------------------------------
+r149 | dhedbor | 2010-11-28 09:11:14 +0000 (Sun, 28 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+Fixed bug in UpdateScrolling if scale ~= 1.0
+------------------------------------------------------------------------
+r148 | dhedbor | 2010-11-28 05:13:52 +0000 (Sun, 28 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+Added a method :SetScrollSpeed(step) to configure the mouse wheel scroll step value.
+------------------------------------------------------------------------
+r146 | torhal | 2010-11-27 22:39:38 +0000 (Sat, 27 Nov 2010) | 3 lines
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+In _SetCell(): If the font parameter is nil, set it based on whether or not the line is a header line - whether or not a previous cell exists and, if so, what font it's using should never have mattered - fixes ticket #27.
+Bumped MINOR version.
+
+------------------------------------------------------------------------
+r145 | torhal | 2010-11-27 22:30:12 +0000 (Sat, 27 Nov 2010) | 3 lines
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+Added support for strings to look up global font instances, such as "GameFontNormal", since omitting the quotations and simply using the actual FontObject is somehow considered retarded...
+
+
+------------------------------------------------------------------------
+r144 | torhal | 2010-11-22 02:31:08 +0000 (Mon, 22 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+Mark lines added with :AddHeader() as header lines, so calls to :SetCell() do not require an explicit font argument (the tooltip's header font will automagically be used).
+------------------------------------------------------------------------
+r142 | dhedbor | 2010-11-20 22:30:49 +0000 (Sat, 20 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibQTip-1.0.lua
+
+Added support for OnReceiveDrag.
+------------------------------------------------------------------------
+r141 | torhal | 2010-11-01 10:39:15 +0000 (Mon, 01 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/LibQTip-1.0.toc
+
+Bumped ToC version.
+------------------------------------------------------------------------
+r140 | torhal | 2010-11-01 10:05:25 +0000 (Mon, 01 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+
+Added 'enable-nolib-creation: no' to .pkgmeta
+------------------------------------------------------------------------

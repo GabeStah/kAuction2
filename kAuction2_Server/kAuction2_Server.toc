@@ -1,0 +1,10 @@
+﻿## Interface: 40000
+## Title: kAuction2 |r[|cffeda55fServer|r]
+## Notes: Includes all kAuction functionality to allow players to host and track kAuction raids.
+## Author: Kulldam
+## DefaultState: enabled
+## LoadOnDemand: 1
+## Dependencies: kAuction2
+## Version: 100
+
+load.xml

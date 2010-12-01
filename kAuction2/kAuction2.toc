@@ -1,0 +1,9 @@
+## Title: kAuction2 |cffb5a5d5[1]|r |cff7fff7fAce3|r 
+## Version: 2.001
+## Author: Kulldam
+## Notes: Simple item auctioning system.
+## Interface: 40000
+## DefaultState: enabled
+## SavedVariables: kAuction2DB, kAuction2RaidDB
+libs.xml
+load.xml

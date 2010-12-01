@@ -1,0 +1,21 @@
+------------------------------------------------------------------------
+r28 | rabbit | 2010-11-01 09:31:44 +0000 (Mon, 01 Nov 2010) | 1 line
+Changed paths:
+   M /trunk/.pkgmeta
+   M /trunk/embeds.xml
+
+Don't create nolib zips, we only use LS and CBH anyway.
+------------------------------------------------------------------------
+r27 | rabbit | 2010-10-16 08:38:32 +0000 (Sat, 16 Oct 2010) | 1 line
+Changed paths:
+   M /trunk/LibCandyBar-3.0.toc
+   M /trunk/bars.lua
+
+Toc bump.
+------------------------------------------------------------------------
+r26 | rabbit | 2009-10-05 00:31:49 +0000 (Mon, 05 Oct 2009) | 1 line
+Changed paths:
+   M /trunk/bars.lua
+
+Reset all scripts.
+------------------------------------------------------------------------
