@@ -4,11 +4,11 @@ if not kAuction2 then
 end
 local L = kAuction2.L
 
-local kAuction2_Server = kAuction2:NewModule("Wishlist", "AceEvent-3.0", "AceHook-3.0")
-kAuction2_Server:SetModuleType("custom")
-kAuction2_Server:SetName(L["Wishlist"])
-kAuction2_Server:SetDescription(L["Allow player to create and manage Wishlists."])
-kAuction2_Server:SetDefaults({
+local kAuction2_Wishlist = kAuction2:NewModule("Wishlist", "AceEvent-3.0", "AceHook-3.0")
+kAuction2_Wishlist:SetModuleType("custom")
+kAuction2_Wishlist:SetName(L["Wishlist"])
+kAuction2_Wishlist:SetDescription(L["Allow player to create and manage Wishlists."])
+kAuction2_Wishlist:SetDefaults({
 	kind = "HealthBar",
 },{aggro_color = {1, 0, 0, 1}})
 
@@ -40,7 +40,7 @@ end
 function kAuction2_Wishlist:OnModuleLoaded(module)
 	if not self.db.profile.global.enabled then return end
 	local id = module.id
-	if id == "HealthBar" or id == "Border" or id == "Background" then
+	if id == "Server" then
 		set_hooks()
 	end
 end
@@ -54,7 +54,11 @@ function kAuction2_Wishlist:OnDisable()
 end
 
 function kAuction2_Wishlist:Test_Function(module,frame,other)
-	
+	kAuction2:Debug('kAuction2_Wishlist:Test_Function', 'This thing fired!', 1)
+end
+
+function kAuction2_Wishlist:Test_Function2(module,frame,other)
+	kAuction2:Debug('kAuction2_Wishlist:Test_Function2', 'This thing fired!', 1)
 end
 
 

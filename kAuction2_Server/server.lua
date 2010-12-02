@@ -12,7 +12,7 @@ kAuction2_Server:SetDefaults({
 	kind = "HealthBar",
 },{aggro_color = {1, 0, 0, 1}})
 
-local kAuction2_HealthBar
+local kAuction2_Wishlist
 local kAuction2_Border
 local kAuction2_Background
 
@@ -20,17 +20,9 @@ local function callback(aggro, name, unit)
 	for frame in kAuction2:IterateFramesForGUID(UnitGUID(unit)) do
 		local db = kAuction2_Server:GetLayoutDB(frame)
 		if db.enabled then
-			if db.kind == "HealthBar" then
-				if kAuction2_HealthBar and kAuction2_HealthBar:IsEnabled() then
-					kAuction2_HealthBar:UpdateFrame(frame)
-				end
-			elseif db.kind == "Border" then
-				if kAuction2_Border and kAuction2_Border:IsEnabled() then
-					kAuction2_Border:UpdateFrame(frame)
-				end
-			elseif db.kind == "Background" then
-				if kAuction2_Background and kAuction2_Background:IsEnabled() then
-					kAuction2_Background:UpdateFrame(frame)
+			if db.kind == "Wishlist" then
+				if kAuction2_Wishlist and kAuction2_Wishlist:IsEnabled() then
+					kAuction2_Wishlist:UpdateFrame(frame)
 				end
 			end
 		end
@@ -38,10 +30,10 @@ local function callback(aggro, name, unit)
 end
 
 local function set_hooks()
-	if not kAuction2_HealthBar then
-		kAuction2_HealthBar = kAuction2:GetModule("HealthBar", true)
-		if kAuction2_HealthBar then
-			kAuction2_Server:RawHook(kAuction2_HealthBar, "GetColor", "HealthBar_GetColor")
+	if not kAuction2_Wishlist then
+		kAuction2_Wishlist = kAuction2:GetModule("Wishlist", true)
+		if kAuction2_Wishlist then
+			kAuction2_Server:RawHook(kAuction2_Wishlist, "GetColor", "Wishlist_ServerTest")
 		end
 	end
 
@@ -70,6 +62,8 @@ end
 
 function kAuction2_Server:OnEnable()
 	set_hooks()
+	kAuction2_Server:Server_Test()
+	kAuction2_Server:Wishlist_ServerTest()
 end
 
 function kAuction2_Server:OnDisable()
@@ -78,6 +72,10 @@ end
 
 function kAuction2_Server:Server_Test(blah)
 	kAuction2:Debug('Server_Test', 'Testing out the server test function', 1)
+end
+
+function kAuction2_Server:Wishlist_ServerTest(blah)
+	kAuction2:Debug('Auction2_Server:Wishlist_ServerTest', 'Testing out the server test function', 1)
 end
 
 function kAuction2_Server:HealthBar_GetColor(module, frame, value)
@@ -332,7 +330,7 @@ function kAuction2_Server:AwardAuction(auction, winner)
 		kAuction2:SendCommunication("DataUpdate", kAuction2:Serialize("auction", auction));
 		if auction.winner then
 			kAuction2:Debug("auctionwinner: " .. auction.winner, 1);
-			SendChatMessage((L["%sAuto-Response: Congratulations, you are the auction winner for %s!"]):format(kAuction2.const.chatPrefix, auction.itemLink)), "WHISPER", nil, auction.winner);
+			SendChatMessage((L["%sAuto-Response: Congratulations, you are the auction winner for %s!"]):format(kAuction2.const.chatPrefix, auction.itemLink), "WHISPER", nil, auction.winner);
 			kAuction2:SendCommunication("AuctionWinner", auction);
 		end
 	end
