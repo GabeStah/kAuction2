@@ -510,3 +510,28 @@ function kAuction2:IsServer()
 	end
 	return false;
 end
+
+--- Determines if the player is in a raid
+-- @return bool If current player is in a raid
+function kAuction2:IsInRaid()
+	if UnitInRaid("player") then
+		return true;
+	end
+	return false;
+end
+
+--- Determines if the passed player name is in the current raid
+-- @param player Name of player
+-- @usage kAuction2:IsPlayerInRaid("Kullda")
+-- @return bool If passed player is found in raid
+function kAuction2:IsPlayerInRaid(player)
+	local i;
+	local name;
+	for i = 1, GetNumRaidMembers() do
+		name = GetRaidRosterInfo(i)
+		if name == player then
+			return true;
+		end	
+	end
+	return false;
+end

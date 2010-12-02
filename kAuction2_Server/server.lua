@@ -73,7 +73,11 @@ function kAuction2_Server:OnEnable()
 end
 
 function kAuction2_Server:OnDisable()
-	LibBanzai:UnregisterCallback(callback)
+	
+end
+
+function kAuction2_Server:Server_Test(blah)
+	kAuction2:Debug('Server_Test', 'Testing out the server test function', 1)
 end
 
 function kAuction2_Server:HealthBar_GetColor(module, frame, value)
@@ -389,9 +393,8 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 	end
 	local id = kAuction2_Server:GetUniqueAuctionId();
 	local councilMembers = {};
-	-- TODO: Insert manual roster check code
 	for iCouncil,vCouncil in pairs(kAuction2.db.profile.looting.councilMembers) do
-		if kAuction2.roster:GetUnitIDFromName(vCouncil) then
+		if kAuction2:IsPlayerInRaid(vCouncil) then
 			tinsert(councilMembers, vCouncil);
 		end
 	end
@@ -444,13 +447,13 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 	kAuction2:SendCommunication("Auction", kAuction2.auctions[#(kAuction2.auctions)])
 	kAuction2:ScheduleTimer(Server_OnAuctionExpire, kAuction2.auctions[#(kAuction2.auctions)].duration + kAuction2.db.profile.looting.auctionCloseDelay, #(kAuction2.auctions));
 	kAuction2:ScheduleTimer("Gui_HookFrameRefreshUpdate", kAuction2.db.profile.looting.auctionDuration + kAuction2.db.profile.looting.auctionCloseVoteDuration + kAuction2.db.profile.looting.auctionCloseDelay);
-	kAuction2:Debug("FUNC: Server_AuctionItem: Item: " .. itemLink .. ", corpse: " .. corpseGuid, 1);
+	kAuction2:Debug("Server_AuctionItem", ("Item: %s, corpse: %s"):format(itemLink, corpseGuid), 1);
 	-- Check if wishlist requires auto-bid
-	if kAuction2:Wishlist_IsEnabled() then
-		local oMatches = kAuction2:Wishlist_GetWishlistItemMatches(kAuction2:Item_GetItemIdFromItemLink(itemLink));
+	if kAuction2_Wishlist:IsEnabled() then
+		local oMatches = kAuction2_Wishlist:GetWishlistItemMatches(kAuction2:Item_GetItemIdFromItemLink(itemLink));
 		if oMatches then
 			-- Check for priority item
-			local wishlistItem = kAuction2:Wishlist_GetHighestPriorityItemFromSet(oMatches);
+			local wishlistItem = kAuction2_Wishlist:GetHighestPriorityItemFromSet(oMatches);
 			if wishlistItem then
 				if wishlistItem.autoBid == true then
 					kAuction2:Gui_AuctionBidButtonOnClick(kAuction2.auctions[#kAuction2.auctions], wishlistItem.bidType, wishlistItem.bestInSlot, wishlistItem.setBonus);				
@@ -479,7 +482,7 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 						StaticPopupDialogs["kAuction2Popup_PromptAutoBid_"..wishlistItem.wishlistId] = {
 							text = "|cFF"..kAuction2:RGBToHex(0,255,0).."kAuction2|r|n|n"..
 							"An automatic " .. sBidType .. " bid has been entered for the recently created auction of ".. itemLink .. " due to your wishlist of this item with the following settings:|n|n" ..
-							"Wishlist: |cFF"..kAuction2:RGBToHex(255,150,0) .. kAuction2:Wishlist_GetNameById(wishlistItem.wishlistId) .. "|r|n" ..
+							"Wishlist: |cFF"..kAuction2:RGBToHex(255,150,0) .. kAuction2_Wishlist:GetNameById(wishlistItem.wishlistId) .. "|r|n" ..
 							"Bid Type: " .. sBidType .. "|n" ..
 							"Best in Slot: " .. sBestInSlot .. "|n" ..
 							"Set Bonus: " .. sSetBonus .. "|n|n",
@@ -526,7 +529,7 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 						"An auction has been detected for the following item found in your wishlists:|n" ..
 						itemLink ..
 						"|n|nWould you like to enter a bid based on your wishlist settings as seen below?|n|n" ..
-						"Wishlist: |cFF"..kAuction2:RGBToHex(255,150,0) .. kAuction2:Wishlist_GetNameById(wishlistItem.wishlistId) .. "|r|n" ..
+						"Wishlist: |cFF"..kAuction2:RGBToHex(255,150,0) .. kAuction2_Wishlist:GetNameById(wishlistItem.wishlistId) .. "|r|n" ..
 						"Bid Type: " .. sBidType .. "|n" ..
 						"Best in Slot: " .. sBestInSlot .. "|n" ..
 						"Set Bonus: " .. sSetBonus .. "|n",
