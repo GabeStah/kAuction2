@@ -1,16 +1,12 @@
-if select(6, GetAddOnInfo("kAuction2_" .. (debugstack():match("[o%.][d%.][u%.]les\\(.-)\\") or ""))) ~= "MISSING" then return end
-
 local kAuction2 = _G.kAuction2
 if not kAuction2 then
   error("kAuction2_Server requires kAuction2")
 end
 local L = kAuction2.L
 
-local LibBanzai
-
 local kAuction2_Server = kAuction2:NewModule("Server", "AceEvent-3.0", "AceHook-3.0")
 kAuction2_Server:SetModuleType("custom")
-kAuction2_Server:SetName(L["Aggro"])
+kAuction2_Server:SetName(L["Server"])
 kAuction2_Server:SetDescription(L["Allow player to host/create kAuction2 raids and auctions"])
 kAuction2_Server:SetDefaults({
 	kind = "HealthBar",
@@ -73,16 +69,6 @@ function kAuction2_Server:OnModuleLoaded(module)
 end
 
 function kAuction2_Server:OnEnable()
-	if not LibBanzai then
-		LoadAddOn("LibBanzai-2.0")
-		LibBanzai = LibStub("LibBanzai-2.0", true)
-	end
-	if not LibBanzai then
-		error(L["kAuction2_Server requires the library LibBanzai-2.0 to be available."])
-	end
-
-	LibBanzai:RegisterCallback(callback)
-
 	set_hooks()
 end
 
@@ -147,7 +133,7 @@ function kAuction2_Server:Background_GetColor(module, frame)
 	
 	return r, g, b, a
 end
-
+--[[
 kAuction2_Server:SetLayoutOptionsFunction(function(self)
 	local function is_kind_allowed(kind)
 		if kind == "HealthBar" then
@@ -195,21 +181,4 @@ kAuction2_Server:SetLayoutOptionsFunction(function(self)
 		end
 	}
 end)
-
-kAuction2_Server:SetColorOptionsFunction(function(self)
-	return 'aggro_color', {
-		type = 'color',
-		name = L['Aggro'],
-		desc = L['Sets which color to use on the health bar of units that have aggro.'],
-		get = function(info)
-			return unpack(self.db.profile.global.aggro_color)
-		end,
-		set = function(info, r, g, b, a)
-			self.db.profile.global.aggro_color = {r, g, b, a}
-			self:UpdateAll()
-		end,
-	},
-	function(info)
-		self.db.profile.global.aggro_color = {1, 0, 0, 1}
-	end
-end)
+]]

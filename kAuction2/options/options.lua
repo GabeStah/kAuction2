@@ -59,7 +59,6 @@ function kAuction2.Options.HandleModuleLoad(module)
 end
 
 function kAuction2.Options.OpenConfig()
-	--[[
 	-- redefine it so that we just open up the pane next time
 	function kAuction2.Options.OpenConfig()
 		AceConfigDialog:Open("kAuction2")
@@ -92,22 +91,9 @@ function kAuction2.Options.OpenConfig()
 		v.order = new_order()
 	end
 	
-	options.args.layout_editor = kAuction2.Options.get_layout_editor_options()
-	kAuction2.Options.get_layout_editor_options = nil
-	options.args.layout_editor.order = new_order()
-	
-	options.args.units, options.args.groups = kAuction2.Options.get_unit_options()
-	kAuction2.Options.get_unit_options = nil
-	options.args.units.order = new_order()
-	options.args.groups.order = new_order()
-	
 	options.args.modules = kAuction2.Options.get_module_options()
 	kAuction2.Options.get_module_options = nil
 	options.args.modules.order = new_order()
-	
-	options.args.colors = kAuction2.Options.get_color_options()
-	kAuction2.Options.get_color_options = nil
-	options.args.colors.order = new_order()
 	
 	options.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(kAuction2.db)
 	options.args.profile.order = new_order()
@@ -115,7 +101,6 @@ function kAuction2.Options.OpenConfig()
 	options.args.profile.disabled = function(info)
 		return InCombatLockdown() or (old_disabled and old_disabled(info))
 	end
-	LibStub("LibDualSpec-1.0"):EnhanceOptions(options.args.profile, kAuction2.db)
 	
 	AceConfig:RegisterOptionsTable("kAuction2", options)
 	AceConfigDialog:SetDefaultSize("kAuction2", 835, 550)
@@ -129,5 +114,4 @@ function kAuction2.Options.OpenConfig()
 	end)
 	
 	return kAuction2.Options.OpenConfig()
-	]]
 end

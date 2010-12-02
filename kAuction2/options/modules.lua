@@ -1,9 +1,9 @@
 local _G = _G
-local PitBull4 = _G.PitBull4
-local L = PitBull4.L
+local kAuction2 = _G.kAuction2
+local L = kAuction2.L
 
-local DEBUG = PitBull4.DEBUG
-local expect = PitBull4.expect
+local DEBUG = kAuction2.DEBUG
+local expect = kAuction2.expect
 
 local global_functions = {}
 
@@ -13,7 +13,7 @@ local global_functions = {}
 -- @usage MyModule:SetGlobalOptionsFunction(function(self)
 --     return 'someOption', { name = "Some option", } -- etc
 -- end)
-function PitBull4.defaultModulePrototype:SetGlobalOptionsFunction(func)
+function kAuction2.defaultModulePrototype:SetGlobalOptionsFunction(func)
 	if DEBUG then
 		expect(func, 'typeof', 'function')
 		expect(global_functions[self], '==', nil)
@@ -22,7 +22,7 @@ function PitBull4.defaultModulePrototype:SetGlobalOptionsFunction(func)
 	global_functions[self] = func
 end
 
-function PitBull4.Options.get_module_options()
+function kAuction2.Options.get_module_options()
 	local module_options = {
 		type = 'group',
 		name = L["Modules"],
@@ -41,9 +41,9 @@ function PitBull4.Options.get_module_options()
 			end,
 			set = function(info, value)
 				if value then
-					PitBull4:EnableModule(info.handler)
+					kAuction2:EnableModule(info.handler)
 				else
-					PitBull4:DisableModule(info.handler)
+					kAuction2:DisableModule(info.handler)
 				end
 			end
 		}
@@ -59,7 +59,7 @@ function PitBull4.Options.get_module_options()
 		end
 	end
 
-	function PitBull4.Options.modules_handle_module_load(module)
+	function kAuction2.Options.modules_handle_module_load(module)
 		local id = module.id
 
 		local opt = {
@@ -81,16 +81,16 @@ function PitBull4.Options.get_module_options()
 		end
 	end
 	
-	for id, module in PitBull4:IterateModules() do
-		PitBull4.Options.modules_handle_module_load(module)
+	for id, module in kAuction2:IterateModules() do
+		kAuction2.Options.modules_handle_module_load(module)
 	end
 	
 	-- and now for disabled modules not yet loaded
-	local modules_not_loaded = PitBull4.modules_not_loaded
+	local modules_not_loaded = kAuction2.modules_not_loaded
 	
 	local function loadable(info)
 		local id = info[#info - 1]
-		local _,_,_,_,loadable = GetAddOnInfo('PitBull4_'..id)
+		local _,_,_,_,loadable = GetAddOnInfo('kAuction2_'..id)
 		return loadable
 	end
 
@@ -107,7 +107,7 @@ function PitBull4.Options.get_module_options()
 		end,
 		set = function(info, value)
 			local id = info[#info - 1]
-			PitBull4:LoadAndEnableModule(id)
+			kAuction2:LoadAndEnableModule(id)
 		end,
 		disabled = unloadable,
 	}
@@ -123,7 +123,7 @@ function PitBull4.Options.get_module_options()
 		type = 'description',
 		name = function(info)
 			local id = info[#info - 1]
-			local _,_,_,_,loadable,reason = GetAddOnInfo('PitBull4_'..id)
+			local _,_,_,_,loadable,reason = GetAddOnInfo('kAuction2_'..id)
 			if not loadable then
 				if reason then
 					if reason == "DISABLED" then
@@ -144,7 +144,7 @@ function PitBull4.Options.get_module_options()
 	
 	for id in pairs(modules_not_loaded) do
 		if not module_options.args[id] then
-			local addon_name = 'PitBull4_' .. id
+			local addon_name = 'kAuction2_' .. id
 			local title = GetAddOnMetadata(addon_name, "Title")
 			local notes = GetAddOnMetadata(addon_name, "Notes")
 		
