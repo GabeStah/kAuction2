@@ -5,6 +5,7 @@
 <Script file="main.lua"/>
 <Script file="client.lua"/>
 <Script file="gui.lua"/>
+<Script file="item.lua"/>
 <Include file="module\load.xml"/>
 <Include file="options\load.xml"/>
 

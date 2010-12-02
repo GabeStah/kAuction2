@@ -222,10 +222,16 @@ function kAuction2_Server:AddBidToAuction(sender, localAuctionData)
 			};
 			tinsert(auction.bids, bid);
 		end
+		-- TODO: Throttle comms
 		kAuction2:SendCommunication("DataUpdate", kAuction2:Serialize("auction", auction))
 	end
 	auction = nil;
 end
+--- Add vote to a particular bid
+-- @param sender Player name sending the vote
+-- @param auction Auction data the bid is applied to
+-- @param bid Actual bid being voted upon
+-- @usage kAuction2_Server:AddBidVote("Kulldam", {{id=1234,item=123456}}, true)
 function kAuction2_Server:AddBidVote(sender, auction, bid)
 	if not kAuction2:IsServer() then
 		return;
@@ -236,9 +242,15 @@ function kAuction2_Server:AddBidVote(sender, auction, bid)
 			kAuction2:ClearLootCouncilVoteFromAuction(kAuction2.auctions[iAuction], sender);
 			tinsert(kAuction2.auctions[iAuction].bids[iBid].lootCouncilVoters, sender);
 		end
+		-- TODO: Throttle comms
 		kAuction2:SendCommunication("DataUpdate", kAuction2:Serialize("auction", kAuction2.auctions[iAuction]))
 	end
 end
+--- Award an auction to a particular player
+-- This is the final step in the auction process and once triggered, an auction is officially complete
+-- @param auction Auction object being won
+-- @param winner Player name winning the auction
+-- @usage kAuction2_Server:AwardAuction({{id=1234,item=123456}}, "Kulldam")
 function kAuction2_Server:AwardAuction(auction, winner)
 	if not kAuction2:IsServer() then
 		return;
@@ -251,18 +263,18 @@ function kAuction2_Server:AwardAuction(auction, winner)
 	end
 	if auction.winner or auction.disenchant then
 		-- Auto-assign via master loot
-		local unit = kAuction2.roster:GetUnitObjectFromName(UnitName("player"))
+		local lootMethod, masterLooterId = GetLootMethod();
 		local corpseGuid = UnitGUID("target") -- NPC Looted
 		if not corpseGuid then -- Else Container Looted
 			corpseGuid = kAuction2.guids.lastObjectOpened;
 		end	
 		-- Check if autoML enabled, player is raid leader, player is ML, player is looting a corpse/object of matching corpseGuid of auction, 
 		-- and auction has not been looted (ensures duplicate named items don't get autoassigned)
-		if kAuction2.db.profile.looting.autoAssignIfMasterLoot and IsRaidLeader() and unit.ML and kAuction2.isLooting and corpseGuid == auction.corpseGuid and auction.looted == false then
+		if kAuction2.db.profile.looting.autoAssignIfMasterLoot and IsRaidLeader() and (lootMethod=='master' and masterLooterId==0) and kAuction2.isLooting and corpseGuid == auction.corpseGuid and auction.looted == false then
 			if #(auction.bids) == 0 then -- Disenchant
 				auction.disenchant = true;
 			end
-			kAuction2:Debug("Server_AwardAuction, Activate MasterLoot", 1);
+			kAuction2:Debug("Server_AwardAuction", "Activate MasterLoot", 1);
 			-- Assign to winner
 			if auction.winner then
 				local booAwarded = false;
@@ -282,7 +294,7 @@ function kAuction2_Server:AwardAuction(auction, winner)
 					end
 				end
 				if booAwarded == false then
-					kAuction2:Print(ChatFrame1, "Master Loot Auto-Assignment failed for " .. auction.winner .. " for item " .. auction.itemLink ..".  Not in range or valid candidate.")
+					kAuction2:Print(ChatFrame1, (L["Master Loot Auto-Assignment failed for %s for item %s.  Not in range or valid candidate."]):format(auction.winner, auction.itemLink))
 				end
 			elseif auction.disenchant then
 				local disenchanterUnit = kAuction2:GetEnchanterInRaidRosterObject();
@@ -304,10 +316,10 @@ function kAuction2_Server:AwardAuction(auction, winner)
 						end
 					end	
 					if booAwarded == false then
-						kAuction2:Print(ChatFrame1, "Master Loot Auto-Assignment Disenchantment failed for " .. disenchanterUnit.name .. " for item " .. auction.itemLink ..".  Not in range or valid candidate.")
+						kAuction2:Print(ChatFrame1, (L["Master Loot Auto-Assignment Disenchantment failed for %s for item %s.  Not in range or valid candidate."]):format(disenchanterUnit.name, auction.itemLink))
 					end
 				else	
-					kAuction2:Print(ChatFrame1, "Master Loot Auto-Assignment Disenchantment failed, no valid disenchanter found in raid.")
+					kAuction2:Print(ChatFrame1, L["Master Loot Auto-Assignment Disenchantment failed, no valid disenchanter found in raid."])
 				end
 			end
 		end
@@ -316,27 +328,30 @@ function kAuction2_Server:AwardAuction(auction, winner)
 		kAuction2:SendCommunication("DataUpdate", kAuction2:Serialize("auction", auction));
 		if auction.winner then
 			kAuction2:Debug("auctionwinner: " .. auction.winner, 1);
-			SendChatMessage(kAuction2.const.chatPrefix.."Auto-Response: Congratulations, you are the auction winner for " .. auction.itemLink .. "!", "WHISPER", nil, auction.winner);
+			SendChatMessage((L["%sAuto-Response: Congratulations, you are the auction winner for %s!"]):format(kAuction2.const.chatPrefix, auction.itemLink)), "WHISPER", nil, auction.winner);
 			kAuction2:SendCommunication("AuctionWinner", auction);
 		end
 	end
 end
+--- Whisper to raid roster member for Auction creation
+-- @param itemLink The itemlink of the item being auctioned
+-- @usage kAuction2_Server:WhisperAuctionToRaidRoster(itemLink)
 function kAuction2_Server:WhisperAuctionToRaidRoster(itemLink)
-	kAuction2.roster:ScanFullRoster();
 	for i = 1, GetNumRaidMembers() do
-		local objMember = kAuction2.roster:GetUnitObjectFromName(GetRaidRosterInfo(i));
-		if objMember then
-			if objMember.online then
-				if not (objMember.name == (UnitName("player"))) then
-					SendChatMessage(kAuction2.const.chatPrefix.."Auto-Generated: An auction has been created for "..itemLink ..".  To bid, /whisper "..UnitName("player").." with the itemlink and appropriate keywords.  For keyword help, /whisper "..UnitName("player").." ka help.", "WHISPER", nil, objMember.name);
-				end
-			end
+		local name, _, _, _, _, _, _, online = GetRaidRosterInfo(raidIndex)
+		if not (name == playerName) and online then
+			SendChatMessage((L["%sAuto-Generated: An auction has been created for %s.  To bid, /whisper %s with the itemlink and appropriate keywords.  For keyword help, /whisper %s ka help."]):format(kAuction2.const.chatPrefix, itemLink, playerName, playerName), "WHISPER", nil, name);
 		end
 	end
 end
+--- Auction passed item details
+-- @param id The ID of the item to be auctioned
+-- @param corpseGuid GUID for the unit or object where loot was found
+-- @param corpseName String name of the corpse or object where loot was found
+-- @usage kAuction2_Server:AuctionItem(12345, "e45f-23va-564c-2352-a23v", "Dragon Name")
 function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 	if not kAuction2:IsServer() or not kAuction2.isActiveRaid then
-		kAuction2:Debug("Not active raid.", 1);
+		kAuction2:Debug("kAuction2_Server:AuctionItem", "Not active raid.", 1);
 		return;
 	end
 	local _, itemLink = GetItemInfo(id);
@@ -355,25 +370,26 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 		end
 	end
 	if booItemInBlacklist then
-		kAuction2:Debug("FUNC: Server_AuctionItem, Item in blacklist: " .. strItemName, 3)
+		kAuction2:Debug("Server_AuctionItem", ("Item in blacklist: %s"):format(itemLink), 3)
 		return; 
 	end
 	local currentItemLink = false;
 	local whitelistData = kAuction2:Item_GetItemWhitelistData(itemLink) or kAuction2:Item_GetItemTypeWhitelistData(itemLink) or {};
 	if whitelistData.name then
-		kAuction2:Debug("FUNC: Create auction, whitelist Data found, name: " .. whitelistData.name, 1);
+		kAuction2:Debug("Server_AuctionItem", ("Whitelist Data found, name: %s"):format(whitelistData.name), 1);
 	end
 	if IsEquippableItem(itemLink) or whitelistData.currentItemSlot then
 		if kAuction2.db.profile.bidding.autoPopulateCurrentItem then
 			local slotItemLink = GetInventoryItemLink("player", whitelistData.currentItemSlot or kAuction2:Item_GetEquipSlotNumberOfItem(itemLink));
 			if slotItemLink then
 				currentItemLink = slotItemLink;
-				kAuction2:Debug("FUNC: Create auction, slotItemLink: " .. slotItemLink, 1);
+				kAuction2:Debug("Server_AuctionItem", ("SlotItemLink: %s"):format(slotItemLink), 1);
 			end
 		end
 	end
 	local id = kAuction2_Server:GetUniqueAuctionId();
 	local councilMembers = {};
+	-- TODO: Insert manual roster check code
 	for iCouncil,vCouncil in pairs(kAuction2.db.profile.looting.councilMembers) do
 		if kAuction2.roster:GetUnitIDFromName(vCouncil) then
 			tinsert(councilMembers, vCouncil);
@@ -422,6 +438,9 @@ function kAuction2_Server:AuctionItem(id, corpseGuid, corpseName)
 	kAuction2.db.profile.gui.frames.bids.visible = true;
 	kAuction2:Gui_HookFrameRefreshUpdate();
 	-- SendComm
+	-- TODO: Change all SendComm to include proper priorities
+	-- AceComm:SendCommMessage(prefix, text, distribution, target, prio, callbackFn, callbackArg)
+	-- SEE: http://www.wowace.com/addons/ace3/pages/api/ace-comm-3-0/
 	kAuction2:SendCommunication("Auction", kAuction2.auctions[#(kAuction2.auctions)])
 	kAuction2:ScheduleTimer(Server_OnAuctionExpire, kAuction2.auctions[#(kAuction2.auctions)].duration + kAuction2.db.profile.looting.auctionCloseDelay, #(kAuction2.auctions));
 	kAuction2:ScheduleTimer("Gui_HookFrameRefreshUpdate", kAuction2.db.profile.looting.auctionDuration + kAuction2.db.profile.looting.auctionCloseVoteDuration + kAuction2.db.profile.looting.auctionCloseDelay);

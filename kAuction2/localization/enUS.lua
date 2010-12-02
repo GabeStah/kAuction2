@@ -17,4 +17,9 @@ L["Disabled in the Blizzard addon list."] = true
 L["This module can not be loaded: %s"] = true
 L["Show an icon on the minimap to open the kAuction config."] = true
 L["Minimap icon"] = true
+L["Master Loot Auto-Assignment failed for %s for item %s.  Not in range or valid candidate."] = true
+L["Master Loot Auto-Assignment Disenchantment failed for %s for item %s.  Not in range or valid candidate."] = true
+L["Master Loot Auto-Assignment Disenchantment failed, no valid disenchanter found in raid."] = true
+L["%sAuto-Response: Congratulations, you are the auction winner for %s!"] = true
+L["%sAuto-Generated: An auction has been created for %s.  To bid, /whisper %s with the itemlink and appropriate keywords.  For keyword help, /whisper %s ka help."] = true
 --@end-non-debug@

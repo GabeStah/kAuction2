@@ -20,6 +20,8 @@ local INVTYPE_BAG = INVTYPE_BAG
 local ITEM_BIND_QUEST = ITEM_BIND_QUEST
 local ITEM_SOULBOUND = ITEM_SOULBOUND
 local ITEM_STARTS_QUEST = ITEM_STARTS_QUEST
+local GetItemInfo = GetItemInfo
+local GetInventoryItemLink = GetInventoryItemLink
 local DATABASE_DEFAULTS = {
 	profile = {
 		debug = {
@@ -194,7 +196,7 @@ local DATABASE_DEFAULTS = {
 local do_nothing = function() end
 
 local new, del = kAuction2.new, kAuction2.del
-
+local playerName;
 -- A set of all unit frames
 local all_frames = {}
 kAuction2.all_frames = all_frames
@@ -263,6 +265,9 @@ function kAuction2:OnInitialize()
 	-- used for run-once-only initialization
 	self:RegisterEvent("ADDON_LOADED")
 	self:ADDON_LOADED()
+	
+	-- Player name
+	playerName = UnitName("player")
 	
 	LoadAddOn("LibDataBroker-1.1")
 	LoadAddOn("LibDBIcon-1.0")
