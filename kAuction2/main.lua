@@ -14,6 +14,7 @@ _G.kAuction2 = kAuction2
 kAuction2.L = L
 -- VERSION
 kAuction2.version = '2.005'
+kAuction2.isServer = false
 
 local INVTYPE_BAG = INVTYPE_BAG
 local ITEM_BIND_QUEST = ITEM_BIND_QUEST
@@ -486,4 +487,21 @@ function kAuction2:CallMethodOnModules(method_name, ...)
 			module[method_name](module, ...)
 		end
 	end
+end
+
+--- Verifies if current player is a valid Server
+-- @return bool If current player is a valid Server
+function kAuction2:IsServer()
+	-- If debug, ignore requirements
+	if self.db.profile.debug.enabled then
+		return true;
+	end
+	-- Verify raid leader
+	if GetNumRaidMembers() > 0 and IsRaidLeader() then -- Current Server
+		kAuction2.isServer = true;
+		return true;
+	elseif GetNumRaidMembers() == 0 and kAuction2.isServer then -- Previous Server
+		return true;
+	end
+	return false;
 end

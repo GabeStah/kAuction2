@@ -3,6 +3,8 @@
 
 <Include file="localization\load.xml"/>
 <Script file="main.lua"/>
+<Script file="client.lua"/>
+<Script file="gui.lua"/>
 <Include file="module\load.xml"/>
 <Include file="options\load.xml"/>
 
